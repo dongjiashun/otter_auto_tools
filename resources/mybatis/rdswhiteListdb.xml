@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="rdswhiteListdb">
+  
+  <select id="rdsWhiteListDb" resultType="com.yh.spring.ssm.bean.RdsWhiteListDb" >
+  	select 
+	  	dbname,
+	  	dbinstance,
+	  	team,
+	  	slowlog 
+  	from dms.`database_list`
+	where 1=1
+  </select>
+
+
+
+<select id="sqlwhiteList"  resultType="com.yh.spring.ssm.bean.SqlwhiteList"  parameterType="java.lang.String">
+select 
+a.depCode as team ,
+sum(a.execCounts) as num
+from (
+SELECT 
+		distinct s.sqltext sqltxt	,
+		s.dbname dbName,
+		s.parsetotalrowcounts/s.mysqltotalexecutioncounts avgParseRowCount,
+		s.parsemaxrowcount parseMaxRowCount	,
+		s.returntotalrowcounts/s.mysqltotalexecutioncounts avgReturnRows,
+		s.returntotalrowcounts maxReturnRows,
+		s.mysqltotalexecutioncounts execCounts,
+		d.team depCode
+FROM dms.rds_slowsql_detailed s
+left join dms.database_list d
+on s.dbname = d.dbname 
+and  s.dbinstance = substring_index(d.dbinstance,".",1)
+where s.inserttime =#{time}
+order by s.mysqltotalexecutioncounts desc 
+limit 50
+)a
+group by a.depCode
+order by sum(a.execCounts) desc 
+</select>
+ </mapper>

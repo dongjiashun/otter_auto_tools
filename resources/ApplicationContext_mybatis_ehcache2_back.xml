@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml>的前面不能加空格 -->
+ <beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+ 						http://www.springframework.org/schema/beans/spring-beans.xsd
+ 						http://www.springframework.org/schema/aop 
+ 						http://www.springframework.org/schema/aop/spring-aop.xsd
+ 						http://www.springframework.org/schema/context 
+ 						http://www.springframework.org/schema/context/spring-context.xsd
+ 						http://www.springframework.org/schema/tx 
+ 						http://www.springframework.org/schema/tx/spring-tx.xsd
+ 	"
+  default-lazy-init="true">
+  <import resource="classpath:spring/applicationContext-ehcache.xml"/>  
+   <!-- 启用注解 -->
+ <context:annotation-config />
+  <!-- 自动扫描 -->
+  <context:component-scan base-package="com.yh.spring.ssm" />
+  <!-- ==================spring的aop配置 添加权限 以及 切面点的位置============================================================= -->
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+   <tx:attributes>
+    <tx:method name="select*" propagation="REQUIRED" read-only="false"
+     rollback-for="java.lang.Exception" />
+    <!-- <tx:method name="insert*" propagation="REQUIRED" read-only="false" -->
+    <!-- rollback-for="java.lang.Exception" /> -->
+    <!-- <tx:method name="update*" propagation="REQUIRED" read-only="false" -->
+    <!-- rollback-for="java.lang.Exception" /> -->
+    <!-- <tx:method name="save*" propagation="REQUIRED" read-only="false" -->
+    <!-- rollback-for="java.lang.Exception" /> -->
+   </tx:attributes>
+  </tx:advice>
+  
+  <!-- 通过aop命名空间的<aop:aspectj-autoproxy ，默认为false，表示使用jdk动态代理织入增强，当配为<aop:aspectj-autoproxy 
+   表示使用CGLib动态代理技术织入增强。不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理。 -->
+  <aop:aspectj-autoproxy proxy-target-class="true" />
+ 
+  <!-- 事物处理  管理service接口-->
+  <aop:config>
+   <aop:pointcut id="pc"
+    expression="execution(* com.yh.spring.ssm.service..*(..))" />
+   <aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />
+  </aop:config>
+  <!-- =======================方法拦截器========================= -->
+<!--   <aop:config> -->
+<!--   <aop:advisor advice-ref="storeInterceptor" -->
+<!--    pointcut="execution(* com.yh.spring.ssm.service.iservice.IUserService.*(..))" /> -->
+<!--  </aop:config> -->
+<!--  <bean id="storeInterceptor" class="com.yh.spring.ssm.Interceptor.test.Interceptor_test"></bean> -->
+  <!-- =============================================================================== -->
+  <!-- 引入配置文件 -->
+  <bean id="propertyConfigurer"
+   class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+   <property name="location" value="classpath:jdbc_all.properties" />
+  </bean>
+  
+  
+  <!-- <property name="location"> -->
+  <!-- <list> -->
+  <!-- <value>/WEB-INF/classes/jdbc.properties</value> -->
+  <!-- </list> -->
+  <!-- </property> -->
+ 
+  <!-- dongjs专用阿里 druid数据库连接池 -->
+  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+   destroy-method="close">
+   <!-- 数据库基本信息配置 -->
+   <property name="url" value="${url}" />
+   <property name="username" value="${username}" />
+   <property name="password" value="${password}" />
+   <property name="driverClassName" value="${driverClassName}" />
+   <property name="filters" value="${filters}" />
+   <!-- 最大并发连接数 -->
+   <property name="maxActive" value="${maxActive}" />
+   <!-- 初始化连接数量 -->
+   <property name="initialSize" value="${initialSize}" />
+   <!-- 配置获取连接等待超时的时间 -->
+   <property name="maxWait" value="${maxWait}" />
+   <!-- 最小空闲连接数 -->
+   <property name="minIdle" value="${minIdle}" />
+   <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+   <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+   <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+   <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+   <property name="validationQuery" value="${validationQuery}" />
+   <property name="testWhileIdle" value="${testWhileIdle}" />
+   <property name="testOnBorrow" value="${testOnBorrow}" />
+   <property name="testOnReturn" value="${testOnReturn}" />
+   <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+   <!-- 打开removeAbandoned功能 -->
+   <property name="removeAbandoned" value="${removeAbandoned}" />
+   <!-- 1800秒，也就是30分钟 -->
+   <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+   <!-- 关闭abanded连接时输出错误日志 -->
+   <property name="logAbandoned" value="${logAbandoned}" />
+  </bean>
+  
+  
+  <!-- 自动扫描 -->
+  <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   <property name="dataSource" ref="dataSource" />
+   <!-- 引入配置文件 -->
+   <property name="configLocation" value="classpath:mybatis-yhconfig.xml"></property>
+   <!-- 自动扫描mapping.xml文件 -->
+   <property name="mapperLocations" value="classpath:mybatis/*.xml"></property>
+  </bean>
+  <!-- ==================持久化模板dao还是自己到自己实现 但是 减少代码量 -->
+  <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" >
+   <constructor-arg ref="sqlSessionFactory" />
+  </bean>
+  <!-- =============DAO接口所在包名，Spring会自动查找其下的类：让dao的接口实现给xml托管 ================-->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+  <property name="basePackage" value="com.yh.spring.ssm.dao" />
+  <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+  </bean>
+  <!-- =======================配置dao自动实例化=========================== -->
+ 
+  <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+  <bean id="transactionManager"
+   class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   <property name="dataSource" ref="dataSource" />
+  </bean>
+
+ </beans>

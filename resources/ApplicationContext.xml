@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml>的前面不能加空格 -->
+ <beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+ 						http://www.springframework.org/schema/beans/spring-beans.xsd
+ 						http://www.springframework.org/schema/aop 
+ 						http://www.springframework.org/schema/aop/spring-aop.xsd
+ 						http://www.springframework.org/schema/context 
+ 						http://www.springframework.org/schema/context/spring-context.xsd
+ 						http://www.springframework.org/schema/tx 
+ 						http://www.springframework.org/schema/tx/spring-tx.xsd
+ 	"
+  default-lazy-init="true">
+  <import resource="classpath:spring/applicationContext_ehcache.xml"/>  
+   <!-- 启用注解 -->
+ <context:annotation-config />
+  <!-- 自动扫描 -->
+  <context:component-scan base-package="com.yh.spring.ssm" />
+  <!-- ==================spring的aop配置 添加权限 以及 切面点的位置============================================================= -->
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+   <tx:attributes>
+    <tx:method name="select*" propagation="REQUIRED" read-only="false"
+     rollback-for="java.lang.Exception" />
+    <!-- <tx:method name="insert*" propagation="REQUIRED" read-only="false" -->
+    <!-- rollback-for="java.lang.Exception" /> -->
+    <!-- <tx:method name="update*" propagation="REQUIRED" read-only="false" -->
+    <!-- rollback-for="java.lang.Exception" /> -->
+    <!-- <tx:method name="save*" propagation="REQUIRED" read-only="false" -->
+    <!-- rollback-for="java.lang.Exception" /> -->
+   </tx:attributes>
+  </tx:advice>
+  
+  <!-- 通过aop命名空间的<aop:aspectj-autoproxy ，默认为false，表示使用jdk动态代理织入增强，当配为<aop:aspectj-autoproxy 
+   表示使用CGLib动态代理技术织入增强。不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理。 -->
+  <aop:aspectj-autoproxy proxy-target-class="true" />
+ 
+  <!-- 事物处理  管理service接口-->
+  <aop:config>
+   <aop:pointcut id="pc"
+    expression="execution(* com.yh.spring.ssm.service..*(..))" />
+   <aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />
+  </aop:config>
+  <!-- =======================方法拦截器========================= -->
+<!--   <aop:config> -->
+<!--   <aop:advisor advice-ref="storeInterceptor" -->
+<!--    pointcut="execution(* com.yh.spring.ssm.service.iservice.IUserService.*(..))" /> -->
+<!--  </aop:config> -->
+<!--  <bean id="storeInterceptor" class="com.yh.spring.ssm.Interceptor.test.Interceptor_test"></bean> -->
+  <!-- =============================================================================== -->
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+<!-- 		<property name="location" value="file:${DDY_RESOURCES_DIR}/jdbc.properties" /> -->
+<property name="location" value="classpath:jdbc.properties" />
+	</bean>
+
+  
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<!-- 指定连接数据库的驱动 -->
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<!-- 指定连接数据库的URL characterEncoding=utf8  generateSimpleParameterMetadata=true-->
+		<property name="jdbcUrl"
+			value="${url}?generateSimpleParameterMetadata=true&amp;characterEncoding=utf8" />
+		<!-- 指定连接数据库的用户名 -->
+		<property name="user" value="${username}" />
+		<!-- 指定连接数据库的密码 -->
+		<property name="password" value="${password}" />
+		<!-- 指定连接数据库连接池的最大连接数 -->
+		<property name="maxPoolSize" value="50" />
+		<!-- 指定连接数据库连接池的最小连接数 -->
+		<property name="minPoolSize" value="10" />
+		<!-- 指定连接数据库连接池的初始化连接数 -->
+		<property name="initialPoolSize" value="10" />
+		<!-- 指定连接数据库连接池的连接的最大空闲时间 n秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0  -->
+		<property name="maxIdleTime" value="120" />
+		<!-- 隔多少秒检查所有连接池中的空闲连接，默认为0表示不检查 -->
+		<property name="idleConnectionTestPeriod" value="60" />
+		<!--  在当前连接数耗尽的时候，一次获取的新的连接数 -->
+		<property name="acquireIncrement" value="2" />
+		<!--  定义在从数据库获取新连接失败后重复尝试获取的次数 -->
+		<property name="acquireRetryAttempts" value="3" />
+		<!--  当连接池用完时客户端调用getConnection()后等待获取新连接的时间，超时后将抛出SQLException，如设为0则无限期等待。单位毫秒，默认为0 -->
+		<property name="checkoutTimeout" value="10000" />
+		<!--  如果设为true那么在取得连接的同时将校验连接的有效性。默认为false -->
+		<property name="testConnectionOnCheckin" value="true" />
+		<property name="preferredTestQuery" value="SELECT 1" />
+
+	</bean>
+  
+  
+  <!-- 自动扫描 -->
+  <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   <property name="dataSource" ref="dataSource" />
+   <!-- 引入配置文件 -->
+   <property name="configLocation" value="classpath:mybatis-yhconfig.xml"></property>
+   <!-- 自动扫描mapping.xml文件 -->
+   <property name="mapperLocations" value="classpath:mybatis/*.xml"></property>
+  </bean>
+  <!-- ==================持久化模板dao还是自己到自己实现 但是 减少代码量 -->
+  <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" >
+   <constructor-arg ref="sqlSessionFactory" />
+  </bean>
+  <!-- =============DAO接口所在包名，Spring会自动查找其下的类：让dao的接口实现给xml托管 ================-->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+  <property name="basePackage" value="com.yh.spring.ssm.dao" />
+  <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+  </bean>
+  <!-- =======================配置dao自动实例化=========================== -->
+ 
+  <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+  <bean id="transactionManager"
+   class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   <property name="dataSource" ref="dataSource" />
+  </bean>
+
+ </beans>

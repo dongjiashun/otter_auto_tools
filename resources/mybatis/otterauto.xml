@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="otterauto">
+  
+  <select id="find_DATA_MEDIA_Maxid" resultType="java.lang.Integer" >
+		SELECT max(ID) FROM otter.DATA_MEDIA;
+  </select>
+
+  <select id="find_CHANNEL_Maxid" resultType="java.lang.Integer" >
+		SELECT max(ID) FROM otter.CHANNEL;
+  </select>
+  
+    <select id="find_PIPELINE_Maxid" resultType="java.lang.Integer" >
+		SELECT max(ID) FROM otter.PIPELINE;
+  </select>
+  
+    <select id="find_DATA_MEDIA_PAIR_Maxid" resultType="java.lang.Integer" >
+		SELECT max(ID) FROM otter.DATA_MEDIA_PAIR;
+  </select>
+  
+    <insert id="source_insert_DATA_MEDIA" parameterType="map" >
+	INSERT INTO otter.DATA_MEDIA 
+			(ID, NAME,NAMESPACE,PROPERTIES,DATA_MEDIA_SOURCE_ID,GMT_CREATE,GMT_MODIFIED)
+	 VALUES (#{id},#{name},#{namespace},#{properties},#{sourceid},now(),now());
+    </insert>
+    
+    <insert id="target_insert_DATA_MEDIA" parameterType="map" >
+	INSERT INTO otter.DATA_MEDIA 
+			(ID, NAME,NAMESPACE,PROPERTIES,DATA_MEDIA_SOURCE_ID,GMT_CREATE,GMT_MODIFIED)
+	 VALUES (#{id},#{name},#{namespace},#{properties},#{targetid},now(),now());
+    </insert>
+    
+    
+   <select id="find_DATA_MEDIA_PAIR_id" parameterType="map"  resultType="java.lang.Integer">
+		SELECT ID FROM otter.DATA_MEDIA where DATA_MEDIA_SOURCE_ID = #{pair_sourceid} and NAME = #{name} and NAMESPACE = #{namespace};
+  </select>
+  
+      <insert id="insert_DATA_MEDIA_PAIR" parameterType="map" >
+	 INSERT INTO `otter`.`DATA_MEDIA_PAIR` 
+	 (`ID`, `PUSHWEIGHT`, `RESOLVER`, `FILTER`, `SOURCE_DATA_MEDIA_ID`, `TARGET_DATA_MEDIA_ID`, `PIPELINE_ID`, `COLUMN_PAIR_MODE`, `GMT_CREATE`, `GMT_MODIFIED`) 
+	 VALUES 
+	 (#{id}, #{PUSHWEIGHT}, #{RESOLVER},#{FILTER}, #{SOURCE_DATA_MEDIA_ID},#{TARGET_DATA_MEDIA_ID}, #{PIPELINE_ID}, #{COLUMN_PAIR_MODE}, now(), now());
+     </insert>
+  
+ </mapper>

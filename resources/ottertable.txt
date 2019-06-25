@@ -1,0 +1,5 @@
+payEngine BankAccountCertDetail 
+bill BillDetail
+logisticsWallet lw_user
+userCenter TFPayUser
+userCenter UserSubInfo

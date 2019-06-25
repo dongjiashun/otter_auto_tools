@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- mybatis添加自带工具 -->
+	<settings> 
+        <setting name="cacheEnabled" value="true" /><!-- 全局映射器启用缓存 --> 
+        <!-- 允许JDBC支持生成主键，如果设置为true的话，这个键强制被使用 -->  
+        <setting name="useGeneratedKeys" value="true" /> <!-- 获取主键 -->
+        <!-- 配置默认的执行器 REUSE：重用预处理， -->
+        <!-- BATCH执行器重用语句和批量更新 -->
+        <setting name="defaultExecutorType" value="REUSE" /> 
+        <!-- 是否使用驼峰式命名 -->
+        <setting name="mapUnderscoreToCamelCase" value="false"/>  
+    </settings>
+
+
+<!-- 	<typeAliases> -->
+<!-- 		<typeAlias type="com.yh.spring.ssm.bean.User" alias="User"/> -->
+<!--   com.yh.spring.ssm.dao.UserDao -->
+<!-- 		<typeAlias type="com.yh.spring.ssm.dao.UserDao" alias="UserDao"/> -->
+<!-- 	</typeAliases> -->
+	
+<!-- 	<plugins> -->
+<!-- 		<plugin interceptor="com.fh.plugin.PagePlugin"> -->
+<!-- 			<property name="dialect" value="mysql"/> -->
+<!-- 			<property name="pageSqlId" value=".*listPage.*"/> -->
+<!-- 		</plugin> -->
+<!-- 	</plugins> -->
+	
+</configuration>

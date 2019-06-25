@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="rdsslowsql">
+  <insert id="saveslowsql" parameterType="java.util.List">
+  replace into dms.`rds_slowsql_detailed`
+  (sqlid,
+  dbname,
+  sqltext,
+  mysqltotalexecutioncounts,
+  mysqltotalexecutiontimes,
+  maxexecutiontime,
+  totallocktimes,
+  maxlocktime,
+  parsetotalrowcounts,
+  parsemaxrowcount,
+  returntotalrowcounts,
+  returnmaxrowcount,
+  createtime,
+  inserttime,
+  dbinstance
+  )values
+  	<foreach collection="list" index="index" item="item" separator="," >
+ (
+ #{item.SQLId} ,
+ #{item.DBName} ,
+ #{item.SQLText} ,
+ #{item.MySQLTotalExecutionCounts} ,
+ #{item.MySQLTotalExecutionTimes} ,
+ #{item.MaxExecutionTime} ,
+ #{item.TotalLockTimes} ,
+ #{item.MaxLockTime} ,
+ #{item.ParseTotalRowCounts} ,
+ #{item.ParseMaxRowCount} ,
+ #{item.ReturnTotalRowCounts} ,
+ #{item.ReturnMaxRowCount} ,
+ #{item.CreateTime} ,
+ DATE_FORMAT(NOW(),'%Y-%m-%d'),
+ #{item.dbinstance}
+ )
+  </foreach>    
+  </insert>
+  
+  <select id="selectslowsql" resultType="com.yh.spring.ssm.bean.RdsSlowlogItem" parameterType="java.lang.String">
+  	select * 
+  	from dms.`rds_slowsql_detailed`
+  	where inserttime = #{inserttime}
+  </select>
+  
+  <select id="selectSlowForMail" resultType="com.yh.spring.ssm.bean.SlowSqlForMail" parameterType="java.lang.String">
+SELECT 
+		distinct s.sqltext sqltxt	,
+		s.dbname dbName,
+		s.parsetotalrowcounts/s.mysqltotalexecutioncounts avgParseRowCount,
+		s.parsemaxrowcount parseMaxRowCount	,
+		s.returntotalrowcounts/s.mysqltotalexecutioncounts avgReturnRows,
+		s.returntotalrowcounts maxReturnRows,
+		s.mysqltotalexecutioncounts execCounts,
+		d.team depCode
+FROM dms.rds_slowsql_detailed s
+left join dms.database_list d
+on s.dbname = d.dbname 
+and  s.dbinstance = substring_index(d.dbinstance,".",1)
+where s.inserttime =#{inserttime}
+order by s.mysqltotalexecutioncounts desc 
+limit 50
+  </select>
+<select id="selectSlowForTable" resultType="com.yh.spring.ssm.bean.TableSize" parameterType="java.lang.String">
+select 
+    `Database Name` as databasename,
+    `Table Name` as tablename,
+    `Table Rows(w)` as tablerow,
+    `Total Size(Gb)` as tablesize,
+    `Fragment Percent` as fragmentpecent
+from
+    dms.v_chk_big_table 
+order by `Total Size(Gb)` desc
+limit 50
+;
+
+</select>
+    
+    
+  </mapper>

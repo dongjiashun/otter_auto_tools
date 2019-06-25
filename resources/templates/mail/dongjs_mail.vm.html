@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>DMS通知</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body style="padding: 0;margin: 0;">
+<div style="width:100%;padding: 25px 0;background: #fff;color: #333;font-size: 14px !important;font-family: 微软雅黑,tahoma,arial, sans-serif;line-height: 1.5em;">
+    <table align="center" cellpadding="0" cellspacing="0" style="margin: 0 auto; width: 640px; background-color: #fff; border: 1px solid #ccc;">
+        <tr>
+            <td style="border-bottom: 1px solid #ddd; padding: 25px 35px 20px 35px;">
+            <span>
+                <span style="font-size: 22px; font-weight: bold;">DMS - ${title}</span>
+            </span>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <table cellpadding="0" cellspacing="0" style="background-color:#f7f8f9; width:100%; font-size: 0.9em;">
+                    <tr>
+                        <td style="padding: 0 35px;">
+                            <p style="font-size: 1.2em; font-weight: bold;">申请人：${userName}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 35px;">
+                            <p style="font-size: 1.2em; font-weight: bold;">审核人：${executeUerName}</p>
+                            <p></p>
+                        </td>
+                    </tr>
+					 <tr>
+                        <td style="padding: 0 35px;">
+                            <p style="font-size: 1.2em; font-weight: bold;">工单地址：${serverHost}</p>
+                        </td>
+                    </tr>
+					 <tr>
+                        <td style="padding: 0 35px;">
+                            <p style="font-size: 1.2em; font-weight: bold;">执行结果：${executeResult}</p>
+                        </td>
+                    </tr>
+						 <tr>
+                        <td style="padding: 0 35px;">
+                            <p style="font-size: 1.2em; font-weight: bold;">审核建议：${rejectReason}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 50px 35px 30px 35px;">本条信息是系统自动发送，请勿回复！</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 15px 35px; border-top: 1px dashed #ddd; font-size: 12px; color: #999;">
+                想了解更多信息，请访问 <a href="${host}" target="_blank" style="color: #428bca;">${serverHost}</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
