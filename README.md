@@ -35,15 +35,15 @@
             ##---------源数据库配置--------
             source.datasource.id=6
             source.datasource.name=source_all_test
-            source.datasource.pwd=oibTbJKhVLSL131g33aM
-            source.datasource.url=jdbc:mysql://10.7.12.4:3306
+            source.datasource.pwd=xxxxxx
+            source.datasource.url=jdbc:mysql://10xxxxx.4:3306
             source.datasource.username=pay
             ##---------目标数据库配置--------
-            target.database.name=antiFraudReport
+            target.database.name=xxxxx
             target.datasource.id=8
-            target.datasource.name=target_tidb
-            target.datasource.pwd=%UsImBHAKv!#KNJ@
-            target.datasource.url=jdbc:mysql://10.77.32.187:4000/antiFraudReport
+            target.datasource.name=xxxxx
+            target.datasource.pwd=%UsxxxxxxxKNJ@
+            target.datasource.url=jdbc:mysql://10.xxxxxx:4000/antiFraudReport
             target.datasource.username=djs
             ##-------数据源信息配置-------
             
