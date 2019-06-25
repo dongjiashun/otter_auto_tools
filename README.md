@@ -71,7 +71,7 @@
 
 ### 细节说明
 配置文件参数说明（本来不想带图的，好人做到底！）
-
+![image](https://github.com/dongjiashun/otter_auto_tools/blob/master/piplindid.png)
 可想而知我配置一个数据表的同步要这么多操作，虽然提供了界面操作，但是我相信大多数使用者，应该是 运维或者DBA居多。
 
 目前otter存在的问题有，无辜挂起，配置不人性化，异常无法精确，相关canal监控无法监控
