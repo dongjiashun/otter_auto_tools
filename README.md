@@ -71,9 +71,20 @@
 
 ### 细节说明
 配置文件参数说明（本来不想带图的，好人做到底！）
+otter.properties细节说明
 ![image](https://github.com/dongjiashun/otter_auto_tools/blob/master/piplindid.png)
+ source.datasource字段说明
+ ![image](https://github.com/dongjiashun/otter_auto_tools/blob/master/datasource.png)
+ 其中该图显示的是源数据配置
+ 目标配置就是以target.datasource 开头命名
+ ### 感想
 可想而知我配置一个数据表的同步要这么多操作，虽然提供了界面操作，但是我相信大多数使用者，应该是 运维或者DBA居多。
 
+### 后期改进
 目前otter存在的问题有，无辜挂起，配置不人性化，异常无法精确，相关canal监控无法监控
+1. 工具日志显示人性化，这个有开发基础 随便改
+2. 代码结构，因为是自己用的工具代码优化没有做，如果后面后使用者需要 我可以改改，自己用算了
+3. 相关数据源添加，链接对象判断。目前没有加，后可以加上这个功能，可以判断配置文件是否正确
+4. 可视化界面导入，有空我做做
 
-先说说使用方法吧
+以上就是工具的使用方法，不清楚的或者有问题的 可以加微信  18757589409.
