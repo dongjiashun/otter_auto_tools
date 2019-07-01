@@ -9,8 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Rds_slowsql {
 	public final static String URL = "https://rds.aliyuncs.com";
-	public final static String ACCESSKEYID = "LTAIn4i6fqWbXqOU";
-	public final static String accessKeySecret = "6Xv58I7TTHos6B9fcF3a7N1Em6RBQf";
+	public final static String ACCESSKEYID = "*********";
+	public final static String accessKeySecret = "************";
 	public final static DateTimeFormatter UTCFORMATTER = DateTimeFormatter
 			.ofPattern("YYYY-MM-dd'T'HH:mm:ss'Z'");
 	public final static DateTimeFormatter DATEFORMAT = DateTimeFormatter
