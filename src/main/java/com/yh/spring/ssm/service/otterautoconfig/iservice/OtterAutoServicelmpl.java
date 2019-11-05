@@ -71,11 +71,11 @@ public class OtterAutoServicelmpl implements OtterAutoService {
 		kid.setGmtCreate(ts);
 		kid.setGmtModified(ts);
 		kid.setId(2);
-		kid.setName("source_test");
-		kid.setPassword("YJzL3Jhv6gj34Dbz");
+		kid.setName("xxxxx");
+		kid.setPassword("xxxxxxxx");
 		kid.setType("MYSQL");
-		kid.setUrl("jdbc:mysql://10.77.64.26:3306");
-		kid.setUsername("tdjsotter");
+		kid.setUrl("jdbc:mysql://xxxxxx:3306");
+		kid.setUsername("xxxxxx");
 		datemedia.setMode("SINGLE");
 		//table名称
 		datemedia.setName("Account");
